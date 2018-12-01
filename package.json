@@ -1,0 +1,17 @@
+{
+  "name": "id3_renamer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "node-id3": "0.1.7",
+    "ramda": "0.26.1",
+    "recursive-readdir": "2.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "1.18.7"
+  },
+  "scripts": {
+    "dev": "nodemon index.js"
+  }
+}
