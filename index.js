@@ -1,6 +1,17 @@
 const recursive = require("recursive-readdir");
 const NodeID3 = require("node-id3");
-const R = require("ramda");
+const {
+  map,
+  replace,
+  split,
+  pipe,
+  head,
+  last,
+  ifElse,
+  identity,
+  startsWith,
+  slice
+} = require("ramda");
 
 const path = "/Users/saldin/Downloads/Da Gudda Jazz/";
 
@@ -9,7 +20,7 @@ recursive(path, (recursiveErr, files) => {
     console.error(recursiveErr);
   }
 
-  R.map(file => {
+  map(file => {
     NodeID3.read(file, (err, tags) => {
       if (err != null) {
         console.error(err);
@@ -31,19 +42,19 @@ recursive(path, (recursiveErr, files) => {
         }`
       */
 
-      const filePathArr = R.pipe(
-        R.replace(path, ""),
-        R.split("/")
+      const filePathArr = pipe(
+        replace(path, ""),
+        split("/")
       )(file);
       const newTags = {
-        artist: R.head(filePathArr),
+        artist: head(filePathArr),
         // 'Крайм Волшебник - Сеньорита' -> 'Сеньорита'
-        title: R.ifElse(
-          R.startsWith(`${R.head(filePathArr)} - `),
-          R.replace(`${R.head(filePathArr)} - `, ""),
-          R.identity
-        )(R.last(filePathArr)),
-        album: R.head(R.slice(-2, -1, filePathArr)) // name of the last folder
+        title: ifElse(
+          startsWith(`${head(filePathArr)} - `),
+          replace(`${head(filePathArr)} - `, ""),
+          identity
+        )(last(filePathArr)),
+        album: head(slice(-2, -1, filePathArr)) // name of the last folder
       };
 
       console.log(`\n${file}\n${JSON.stringify(newTags, null, 2)}`);
