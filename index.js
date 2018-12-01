@@ -49,10 +49,13 @@ recursive(path, (recursiveErr, files) => {
       const newTags = {
         artist: head(filePathArr),
         // 'Крайм Волшебник - Сеньорита' -> 'Сеньорита'
-        title: ifElse(
-          startsWith(`${head(filePathArr)} - `),
-          replace(`${head(filePathArr)} - `, ""),
-          identity
+        title: pipe(
+          ifElse(
+            startsWith(`${head(filePathArr)} - `),
+            replace(`${head(filePathArr)} - `, ""),
+            identity
+          ),
+          replace(".mp3", "")
         )(last(filePathArr)),
         album: head(slice(-2, -1, filePathArr)) // name of the last folder
       };
